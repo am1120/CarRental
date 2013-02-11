@@ -25,6 +25,7 @@ public class AddBulkCarsServlet extends HttpServlet {
     private static final String CONTENT_TYPE = "text/html; charset=windows-1252";
 
     public void init(ServletConfig config) throws ServletException {
+        //init
         super.init(config);
     }
 
