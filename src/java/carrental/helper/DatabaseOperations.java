@@ -203,7 +203,63 @@ public class DatabaseOperations
     return message;
   }
 
-  public String insertQuery(String _name, String _miles)
+  public String removeQuery(int _id){
+      String message = "started..";
+      XMLHelper myXMLHelper = new XMLHelper();
+    CarRentalLogger carLogger = new CarRentalLogger();
+    PreparedStatement ps;
+    String[] params = myXMLHelper.getConnectionParamsFromXML();
+    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    
+    int pid = _id;
+    
+    Connection connection;
+    Statement statement;
+    ResultSet rs;
+
+    String queryDelete = "DELETE FROM Cars WHERE cars.P_Id=";
+    String queryCommit = "commit";
+    
+    try{
+         carLogger.Logger("Loading  com.mysql.jdbc.Driver driver ..");
+        Class.forName("com.mysql.jdbc.Driver");
+        carLogger.Logger("Driver loaded.");
+        carLogger.Logger("Using connection string: " + conUrl);
+        connection = DriverManager.getConnection(conUrl);
+
+        statement = connection.createStatement();
+        carLogger.Logger("Preparing DELETE statement in MySQL ..");
+        queryDelete = "DELETE FROM Cars WHERE cars.P_Id=";
+      
+        carLogger.Logger("Trying query : " + queryDelete + " with " + pid );
+        statement.executeUpdate("DELETE FROM Cars WHERE Cars.P_Id = " + pid);
+        statement.executeUpdate(queryCommit);
+      
+     
+      message = "ok";
+    }catch (SQLException e)
+    {
+      carLogger.Logger("SQLException: " + e, e);
+      message = "SQLException: " + e;
+      return message;
+    }
+    catch (ClassNotFoundException e)
+    {
+      carLogger.Logger("Driver Error" + e, e);
+      message = "Driver Error: " + e;
+      return message;
+    }
+    catch (Exception e)
+    {
+      carLogger.Logger("Exception: " + e, e);
+      message = "Exception: " + e;
+      return message;
+    }
+    return message;
+
+  }
+  
+  public String insertQuery(String _name,String _model, String _miles)
   {
     String message = "started";
     XMLHelper myXMLHelper = new XMLHelper();
@@ -213,12 +269,13 @@ public class DatabaseOperations
     String conUrl = myXMLHelper.getConnectionStringFromXML();
     // important vars
     String name = _name;
+    String model = _model;
     String miles = _miles;
     Connection connection;
     Statement statement;
     ResultSet rs;
 
-    String queryInsert = "INSERT INTO Cars VALUES(?,?)";
+    String queryInsert = "INSERT INTO Cars VALUES(?,?,?)";
     String queryCommit = "commit";
 
     try
@@ -268,11 +325,11 @@ public class DatabaseOperations
         connection = DriverManager.getConnection(conUrl);
 
         statement = connection.createStatement();
-        carLogger.Logger("Preparing insert statement ..");
+        carLogger.Logger("Preparing insert statement in MySQL ..");
         queryInsert = "INSERT INTO Cars VALUES(?,?)";
       
         carLogger.Logger("Trying query : " + queryInsert + " with " + name + " and " + miles);
-        statement.executeUpdate("INSERT INTO Cars (Name,Miles) VALUES('" + name + "', " + miles + ")");
+        statement.executeUpdate("INSERT INTO Cars (Name,Model,Miles) VALUES('" + name + "', '" + model + "' , " + miles + ")");
         statement.executeUpdate(queryCommit);
       }
      

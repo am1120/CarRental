@@ -36,6 +36,10 @@
         <servlet-name>AddCarJDBC</servlet-name>
         <servlet-class>carrental.AddCarJDBCServlet</servlet-class>
     </servlet>
+     <servlet>
+        <servlet-name>RemoveCar</servlet-name>
+        <servlet-class>carrental.RemoveCarServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>ConfigureDatabase</servlet-name>
         <servlet-class>carrental.ConfigureDatabaseServlet</servlet-class>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>AddCarJDBC</servlet-name>
         <url-pattern>/addcarjdbc</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>RemoveCar</servlet-name>
+        <url-pattern>/removecar</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ListCarsJDBC</servlet-name>

@@ -34,34 +34,45 @@ public class ListCarsJDBCServlet
         response.setContentType(CONTENT_TYPE);
         PrintWriter out = response.getWriter();
         ResultSet rs;
+
         rs = myDbOps.selectFromTable();
         out.println("<html>");
-        out.println("<head><title>TestJDBCServlet</title></head>");
+        out.println("<head><title>CarRental - List Cars for Rental</title></head>");
         out.println("<link type=\"text/css\" rel=\"stylesheet\" href=\"css/jdeveloper.css\"/>");
-        out.println("<body bgcolor='white'>");
-        out.println("<h1>List JDBC Cars</h1>");
-        
+        out.println("<link type=\"text/css\" rel=\"stylesheet\" href=\"css/bootstrap.min.css\"/>");
+        out.println("<link type=\"text/css\" rel=\"stylesheet\" href=\"css/custom.css\"/>");
+        out.println("<body>");
+        out.println(ListCarsVar.navHtml);
+
 //        TODO: how many cars in fleet?
 //        try adding num of cars to XML file
 //        out.println("<p>You currently have <b>" +  + "</b> Cars in your Fleet:</p><br/>");
-
         try {
             if (rs != null) {
-                out.println("<table class=\"borders\" cellspacing=\"2\" cellpadding=\"3\" border=\"1\">");
+                out.println("<div class=\"container-fluid\">\n"
+                        + "        <div class=\"row\">\n"
+                        + "            <div class=\"main col-md-6 center-block\">");
+                out.println("<h1>List of cars available for rent</h1>");
+                out.println("<table class=\"table table-hover\">");
                 out.println("<tr>");
                 out.println("    <th>Car Id</th>");
-                out.println("    <th>Car Name</th>");
+                out.println("    <th>Car Manufacturer</th>");
+                out.println("    <th>Car Model</th>");
                 out.println("    <th>Car Miles</th>");
                 out.println("</tr>");
                 while (rs.next()) {
                     out.println("<tr>");
                     out.println("    <td>" + rs.getString("P_Id") + "</td>");
                     out.println("    <td>" + rs.getString("Name") + "</td>");
+                    out.println("    <td>" + rs.getString("Model") + "</td>");
                     out.println("    <td>" + rs.getString("Miles") + "</td>");
                     out.println("</tr>");
                 }
                 out.println("</p>");
                 out.println("</table>");
+                out.println("</div>\n"
+                        + "        </div>\n"
+                        + "    </div>");
             } else {
                 out.println("<code>Result Set is null!  Verify database connectivity first.");
             }
@@ -70,10 +81,41 @@ public class ListCarsJDBCServlet
             carLogger.Logger("SQLException: " + e, e);
 
         }
-        out.println("<h3><a href=\"home.jsp\"> Home </a></h3>");
-        out.println("<h3><a href=\"addCarJDBC.jsp\"> Add a new Rental Car </a></h3>");
-        out.println("<h3><a href=\"configDB.jsp\"> Configure Database Connectivity </a></h3>");
+      
+        out.println(ListCarsVar.scriptHtml);
         out.println("</body></html>");
         out.close();
     }
+}
+
+class ListCarsVar {
+
+    public static String navHtml = " <nav class=\"navbar navbar-default\">"
+            + "<div class=\"container-fluid\">"
+            + "<div class=\"navbar-header\">\n"
+            + "                <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">\n"
+            + "                    <span class=\"sr-only\">Toggle navigation</span>\n"
+            + "                    <span class=\"icon-bar\"></span>\n"
+            + "                    <span class=\"icon-bar\"></span>\n"
+            + "                    <span class=\"icon-bar\"></span>\n"
+            + "                </button>\n"
+            + "                <a class=\"navbar-brand\" href=\"#\">CarRental</a>\n"
+            + "            </div>"
+            + "  <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n"
+            + "                <ul class=\"nav navbar-nav\">\n"
+            + "                    <li ><a href=\"home.jsp\">Home </a></li>\n"
+            + "                    <li class=\"active\"><a href=\"listcarsjdbc\">List Cars<span class=\"sr-only\">(current)</span></a></li>\n"
+            + "                    <li ><a href=\"addCarJDBC.jsp\">Add a car</a></li>\n"
+            +"  <li ><a href=\"removeCar.jsp\">Remove a car</a></li>"
+            + "\n"
+            + "                </ul>\n"
+            + "\n"
+            + "            </div><!-- /.navbar-collapse -->\n"
+            + "        </div><!-- /.container-fluid -->\n"
+            + "    </nav>";
+
+    public static String scriptHtml = "<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->\n"
+            + "    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>\n"
+            + "    <!-- Include all compiled plugins (below), or include individual files as needed -->\n"
+            + "    <script src=\"js/bootstrap.min.js\"></script>";
 }

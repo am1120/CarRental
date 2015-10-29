@@ -35,10 +35,11 @@ public class AddCarJDBCServlet
         out.println("</body></html>");
         // get parameters from the form
         String name = request.getParameter("name");
+        String model = request.getParameter("model");
         String miles = request.getParameter("miles");
         String dbtype = request.getParameter("dbtype");
 
-        myDbOps.insertQuery(name, miles);
+        myDbOps.insertQuery(name, model, miles);
         response.sendRedirect("listcarsjdbc"); // redirect to list page
     }
 }
