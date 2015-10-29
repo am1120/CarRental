@@ -10,7 +10,7 @@
       function enableTextField() {
         var form = document.forms[0];
         form.sid.disabled = false;
-        form.port.value = "1521";
+        form.port.value = "3306";
         form.host.value = "localhost";
         form.username.value = "SYSTEM";
         form.password.value = "admin";
@@ -67,28 +67,11 @@
       <p/>
       <input type="radio" name="dbtype" value="oracle" onclick="javascript:enableTextField()"/>
       <input type="text" name="txtOracle" value="Oracle" readonly="readonly"/>
+      <p/>
+      <input type="radio" name="dbtype" value="mysql" onclick="javascript:enableTextField()"/>
+      <input type="text" name="txtMySQL" value="MySQL" readonly="readonly"/>
       
       <h3>Step 2. .Set JDBC connection parameters:</h3>
-      <!--    <p>
-      View these 
-      <u>
-        <span class="dialink" onclick="sm('box',750,575)">Instructions</span></u>
-       first to create and configure the CarRental database.
-    </p> -->
-      <!--    <p>
-        <input type="radio" name="dbtype" checked="checked" value="sqlserver"
-               onclick="javascript:disableTextField()"/><input type="text"
-                                                               name="txtSQLServer"
-                                                               value="SQLServer"
-                                                               readonly="readonly"/>
-      </p>
-      <p>
-        <input type="radio" name="dbtype" value="oracle"
-               onclick="javascript:enableTextField()"/><input type="text"
-                                                              name="txtOracle"
-                                                              value="Oracle"
-                                                              readonly="readonly"/>
-      </p>  -->
       <table class="borders" cellspacing="2" cellpadding="3" border="1">
         <tr>
           <td>Hostname</td>

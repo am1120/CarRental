@@ -56,7 +56,7 @@ public class ConfigureDatabaseServlet extends HttpServlet {
                     "          document.write(\"INSERT INTO CarRental.dbo.Cars VALUES ('test', 12345);<br/>\");\n" +
                     "          document.write(\"<br/>\");\n" +
                     "          document.write(\"<br/>\");\n" +
-                    "          document.write(\"<b><u>ORACLE:<\\/b><\\/u><br/>\");\n" +
+                    "          document.write(\"<b><u>ORACLE & MySQL:<\\/b><\\/u><br/>\");\n" +
                     "          document.write(\"<br/>\");\n" +
                     "          document.write(\"Log into SQLPlus and execute the following queries:<br/>\");\n" +
                     "          document.write(\"<br/>\");\n" +
@@ -86,7 +86,7 @@ public class ConfigureDatabaseServlet extends HttpServlet {
                 carLogger.Logger("Using connection string: " + conUrl);
                 connection = DriverManager.getConnection(conUrl);
 
-            } else {
+            } else if(conUrl.contains("oracle")){
                 //out.println("<code>Loading oracle.jdbc.driver.OracleDriver driver ..</code><br/><br/>");
                 carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
                 Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -98,6 +98,15 @@ public class ConfigureDatabaseServlet extends HttpServlet {
                 connection = DriverManager.getConnection(conUrl, params[3], params[4]);
                 //jdbc:oracle:thin:@myhost:1521:orcl
 
+            } else {
+                carLogger.Logger("Loading com.mysql.jdbc.Driver driver ..");
+                Class.forName("com.mysql.jdbc.Driver");
+                //Class.forName("oracle.jdbc.driver.DMSFactory");
+                //out.println("<code>Driver loaded.</code><br/><br/>");
+                carLogger.Logger("Driver loaded.");
+                //out.println("<code>Using connection string: " + conUrl + " with User: " + params[3] + " and password: " + params[4] + "</code><br/><br/>");
+                carLogger.Logger("Using connection string: " + conUrl);
+                connection = DriverManager.getConnection(conUrl);
             }
             if (connection.isValid(2)) {
                 out.println("<code><b>SUCCESS!</b> A JDBC connection has been established.</code><br/>");

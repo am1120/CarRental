@@ -76,7 +76,7 @@ public class TestJDBCServlet extends HttpServlet {
                     carLogger.Logger("Using connection string: " + conUrl);
                     connection = DriverManager.getConnection(conUrl);
 
-                } else {
+                } else if(conUrl.toLowerCase().contains("oracle")){
                     carLogger.Logger("Oracle detected ..");
                     query = "SELECT * FROM Cars";
                     out.println("<code>Loading oracle.jdbc.driver.OracleDriver driver ..</code><br/><br/>");
@@ -90,6 +90,18 @@ public class TestJDBCServlet extends HttpServlet {
                     connection = DriverManager.getConnection(conUrl, params[3], params[4]);
 
                     //jdbc:oracle:thin:@myhost:1521:orcl
+                } else {
+                     carLogger.Logger("MySql detected ..");
+                    query = "SELECT * FROM Cars";
+                    out.println("<code>Loading com.mysql.jdbc.Driver driver ..</code><br/><br/>");
+                    carLogger.Logger("Loading com.mysql.jdbc.Driver driver ..");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    out.println("<code>Driver loaded.</code><br/><br/>");
+                    carLogger.Logger("Driver loaded.");
+                    out.println("<code>Using connection string: " + conUrl + "</code><br/><br/>");
+                    carLogger.Logger("Using connection string: " + conUrl );
+                    connection = DriverManager.getConnection(conUrl);
+
                 }
             }
             /* SAVE WAS NOT CHECKED - USING CONTEXT */
@@ -109,7 +121,7 @@ public class TestJDBCServlet extends HttpServlet {
                     out.println("<code>Using connection string: " + conUrl + "</code><br/><br/>");
                     carLogger.Logger("Using connection string: " + conUrl);
                     connection = DriverManager.getConnection(conUrl);
-                } else {
+                } else if(dbType.toLowerCase().equals("oracle")){
                     conUrl = myDbOps.buildConnectionURL(dbType, host, user, pass, port, sid);
                     query = "SELECT * FROM Cars";
                     out.println("<code>Loading oracle.jdbc.driver.OracleDriver driver ..</code><br/><br/>");
@@ -133,6 +145,24 @@ public class TestJDBCServlet extends HttpServlet {
 
                     //jdbc:oracle:thin:@myhost:1521:orcl
 
+                } else {
+                     conUrl = myDbOps.buildConnectionURL(dbType, host, user, pass, port, sid);
+                    query = "SELECT * FROM Cars";
+                    out.println("<code>Loading com.mysql.jdbc.Driver driver ..</code><br/><br/>");
+                    carLogger.Logger("Loading com.mysql.jdbc.Driver driver ..");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    //Class.forName("oracle.jdbc.driver.DMSFactory");
+                    out.println("<code>Driver loaded.</code><br/><br/>");
+                    carLogger.Logger("Driver loaded.");
+                    out.println("<code>Using connection string: " + conUrl + "</code><br/><br/>");
+                    carLogger.Logger("Using connection string: " + conUrl );
+
+                    //without SID - similar to sql server
+                    //connection = DriverManager.getConnection(conUrl, params[3], params[4]);
+
+                    //includes SID
+                    connection = DriverManager.getConnection(conUrl);
+                    
                 }
                 if (connection.isValid(2)) {
                     out.println("<code><b>SUCCESS!</b> A JDBC connection has been established.</code><br/><br/>");

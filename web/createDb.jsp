@@ -55,10 +55,11 @@ java.sql.ResultSet,java.sql.SQLException,java.sql.Statement,carrental.helper.Car
 
     if (conUrl.contains("sqlserver")) {
         dbType = "SQLServer";
-
     }
-    else {
+    else if(conUrl.contains("oracle")){
         dbType = "Oracle";
+    }else {
+        dbType = "MySQL";
     }
 
   %>
@@ -75,7 +76,10 @@ java.sql.ResultSet,java.sql.SQLException,java.sql.Statement,carrental.helper.Car
     <% } else if (dbType == "Oracle" && message.contains("SUCCESS")) { %>
     Step 4. Create the CarRental table, sequence, and first "car" row by clicking the button below.
     <% valid = true; %>
-    <% } else if ((dbType == "SQLServer" && !message.contains("SUCCESS")) || dbType == "Oracle" && !message.contains("SUCCESS")) {%>
+    <% } else if (dbType == "MySQL" && message.contains("SUCCESS")) { %>
+    Step 4. Create the CarRental table, sequence, and first "car" row by clicking the button below.
+    <% valid = true; %>
+    <% } else if ((dbType == "SQLServer" && !message.contains("SUCCESS")) || dbType == "Oracle" && !message.contains("SUCCESS") || dbType == "MySQL" && !message.contains("SUCCESS")) {%>
     Unable to establish JDBC connection.  Go back and try again.
     <!-- set SQL Server tcp/ip requirements ? -->
     <% valid = false; %>

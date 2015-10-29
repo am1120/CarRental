@@ -608,8 +608,12 @@ public class XMLHelper {
                     } else if (strDbType.trim().toLowerCase().equals("oracle")) {
                         conUrl = ("jdbc:oracle:thin:@" + strHost + ":" + strPort + ":" + strSid);
                         //jdbc:oracle:thin:@myhost:1521:orcl
-                    } else {
-                        //   carLogger.Logger("Unknown database type!");
+                    } else if (strDbType.trim().toLowerCase().equals("mysql")) {
+                        conUrl = ("jdbc:mysql://" + strHost + ":" + strPort + "/carrental?user="+ strUser + "&password=" + strPassword);
+                        
+                    }else
+                    {
+                       //   carLogger.Logger("Unknown database type!");
                     }
 
                 }
@@ -712,7 +716,10 @@ public class XMLHelper {
                     } else if (strDbType.trim().toLowerCase().equals("oracle")) {
                         conUrl = ("jdbc:oracle:thin:@" + strHost + ":" + strPort + ":" + strSid);
                         //jdbc:oracle:thin:@myhost:1521:orcl
-                    } else {
+                    }  else if (strDbType.trim().toLowerCase().equals("mysql")) {
+                        conUrl = ("jdbc:mysql://" + strHost + ":" + strPort + "/carrental?user="+ strUser + "&password=" + strPassword);
+                        
+                    }else {
                         carLogger.Logger("Unknown database type!");
                     }
 

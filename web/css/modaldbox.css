@@ -27,5 +27,5 @@
 
 *html #ol {
     background-image: none;
-    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src="overlay.png", sizingMethod="scale");
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="overlay.png", sizingMethod="scale");
 }

@@ -41,21 +41,15 @@ public class DatabaseOperations
     {
       conUrl = ("jdbc:oracle:thin:@" + host + ":" + port + ":" + sid);
     }
+    else if (dbType.toLowerCase().equals("mysql"))
+    {
+        conUrl = ("jdbc:mysql://" + host + ":" + port + "/carrental?user="+ user + "&password="+pass);
+    }
     else
     {
       carLogger.Logger("Unknown database type!");
       conUrl = "Unknown database type!";
     }
-    //    if (strDbType.trim().toLowerCase().equals("sqlserver")) {
-    //        conUrl = ("jdbc:sqlserver://" + strHost + ":" + strPort + ";databaseName=CarRental;user=" + strUser + ";password=" + strPassword + ";");
-    //        //databaseName=CarRental;user=sa;password=admin;
-    //    } else if (strDbType.trim().toLowerCase().equals("oracle")) {
-    //        conUrl = ("jdbc:oracle:thin:@" + strHost + ":" + strPort + ":" + strSid);
-    //        //jdbc:oracle:thin:@myhost:1521:orcl
-    //    } else {
-    //        carLogger.Logger("Unknown database type!");
-    //    }
-
     return conUrl;
   }
 
@@ -77,7 +71,7 @@ public class DatabaseOperations
         carLogger.Logger("Using connection string: " + conUrl + "");
         connection = DriverManager.getConnection(conUrl);
       }
-      else
+      else if(conUrl.contains("oracle"))
       {
         query = "SELECT * FROM Cars";
         carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
@@ -87,6 +81,14 @@ public class DatabaseOperations
         carLogger.Logger("Using connection string: " + conUrl + ":" + params[3] + ":" + params[4]);
         connection = DriverManager.getConnection(conUrl, params[3], params[4]);
         //jdbc:oracle:thin:@myhost:1521:orcl
+      }
+      else {
+          query = "SELECT * FROM Cars";
+          carLogger.Logger("Loading mysql.jdbc.driver.mysql driver ..");
+          Class.forName("com.mysql.jdbc.Driver");
+          carLogger.Logger("Driver loaded.");
+          carLogger.Logger("Using connection string: " + conUrl);
+          connection = DriverManager.getConnection(conUrl);
       }
       carLogger.Logger("Executing query: " + query);
       statement = connection.createStatement();
@@ -148,7 +150,7 @@ public class DatabaseOperations
           ps.close();
         }
       }
-      else
+      else if(conUrl.contains("oracle"))
       {
         connection = DriverManager.getConnection(conUrl, params[3], params[4]);
         statement = connection.createStatement();
@@ -161,6 +163,20 @@ public class DatabaseOperations
           statement.executeUpdate("INSERT INTO Cars Values(carid_seq.nextval, '" + name + "_" + i + "', " + myRandom.nextInt(200000) + ")");
           statement.executeUpdate(queryCommit);
         }
+      }
+      else
+      {
+         connection = DriverManager.getConnection(conUrl);
+        statement = connection.createStatement();
+        ps = connection.prepareStatement(queryInsert);
+        carLogger.Logger("Loading com.mysql.jdbc.driver driver ..");
+        Class.forName("com.mysql.jdbc.Driver");
+        carLogger.Logger("Driver loaded.");
+        for (int i = 0; i < numCars; i++)
+        {
+          statement.executeUpdate("INSERT INTO Cars (Name,Miles) VALUES('" + name + "_" + i + "', " + myRandom.nextInt(200000) + ")");
+          statement.executeUpdate(queryCommit);
+        } 
       }
 
       message = "ok";
@@ -227,7 +243,7 @@ public class DatabaseOperations
           ps.close();
         }
       }
-      else
+      else if(conUrl.contains("oracle"))
       {
         carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
         Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -243,7 +259,23 @@ public class DatabaseOperations
         statement.executeUpdate("INSERT INTO Cars Values(carid_seq.nextval, '" + name + "', " + miles + ")");
         statement.executeUpdate(queryCommit);
 
+      } else {
+         
+        carLogger.Logger("Loading  com.mysql.jdbc.Driver driver ..");
+        Class.forName("com.mysql.jdbc.Driver");
+        carLogger.Logger("Driver loaded.");
+        carLogger.Logger("Using connection string: " + conUrl);
+        connection = DriverManager.getConnection(conUrl);
+
+        statement = connection.createStatement();
+        carLogger.Logger("Preparing insert statement ..");
+        queryInsert = "INSERT INTO Cars VALUES(?,?)";
+      
+        carLogger.Logger("Trying query : " + queryInsert + " with " + name + " and " + miles);
+        statement.executeUpdate("INSERT INTO Cars (Name,Miles) VALUES('" + name + "', " + miles + ")");
+        statement.executeUpdate(queryCommit);
       }
+     
       message = "ok";
     }
     catch (SQLException e)
@@ -288,7 +320,7 @@ public class DatabaseOperations
         connection = DriverManager.getConnection(conUrl);
       }
 
-      else
+      else if(conUrl.contains("oracle"))
       {
         dbType = "Oracle";
         carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
@@ -298,6 +330,15 @@ public class DatabaseOperations
         carLogger.Logger("Using connection string: " + conUrl + " with User: " + params[3] + " and password: " + params[4]);
         connection = DriverManager.getConnection(conUrl, params[3], params[4]);
       }
+      else {
+        dbType = "MySQL";
+        carLogger.Logger("Loading com.mysql.jdbc.Driver driver ..");
+        Class.forName("com.mysql.jdbc.Driver");
+       
+        carLogger.Logger("Driver loaded.");
+        carLogger.Logger("Using connection string: " + conUrl);
+        connection = DriverManager.getConnection(conUrl);
+      }
       Statement st = connection.createStatement();
 
       if (dbType == "SQLServer")
@@ -305,18 +346,23 @@ public class DatabaseOperations
         int rs = st.executeUpdate("CREATE TABLE CarRental.dbo.Cars(P_Id int PRIMARY KEY IDENTITY,Name varchar(255) NOT NULL,Miles int NOT NULL)");
         rs = st.executeUpdate("INSERT INTO CarRental.dbo.Cars VALUES ('test', 12345)");
       }
-      else
+      else if(dbType == "Oracle")
       {
         int rs = st.executeUpdate("CREATE TABLE Cars(P_Id INT PRIMARY KEY,Name VARCHAR(255) NOT NULL,Miles INT NOT NULL)");
         rs = st.executeUpdate("create sequence carid_seq start with 1 increment by 1 nomaxvalue");
         rs = st.executeUpdate("INSERT INTO Cars (P_Id, Name, Miles) VALUES (carid_seq.nextval, 'test', 12345)");
         rs = st.executeUpdate("commit");
       }
+      else{ //mysql
+        int rs = st.executeUpdate("CREATE TABLE Cars (P_Id int unsigned auto_increment not null , Name VARCHAR(255) NOT NULL , Miles INT NOT NULL , PRIMARY KEY (P_Id)");
+        rs = st.executeUpdate("INSERT INTO Cars (Name, Miles) VALUES ('test', 12345)");
+     
+      }
       message = "ok";
     }
     catch (SQLException e)
     {
-      carLogger.Logger("SQLException: " + e, e);
+      carLogger.Logger("CREATE SQLException: " + e, e);
       message = "SQLException: " + e;
       return message;
     }
@@ -335,61 +381,8 @@ public class DatabaseOperations
     return message;
   }
 
-  // public String createDatabase()
-  //  {
-  //    String conUrl = myXMLHelper.getConnectionStringFromXML();
-  //    String[] params = myXMLHelper.getConnectionParamsFromXML();
-  //
-  //    String message = "asdf";
-  //    Connection connection;
-  //    carLogger.Logger("Attempting to create database ..");
-  //    try
-  //    {
-  //      if (conUrl.contains("sqlserver"))
-  //      {
-  //        carLogger.Logger("Loading com.microsoft.sqlserver.jdbc.SQLServerDriver driver ..");
-  //        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-  //        carLogger.Logger("Driver loaded.");
-  //        carLogger.Logger("Using connection string: " + conUrl);
-  //        connection = DriverManager.getConnection(conUrl);
-  //      }
-  //
-  //      else
-  //      {
-  //        carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
-  //        Class.forName("oracle.jdbc.driver.OracleDriver");
-  //        //Class.forName("oracle.jdbc.driver.DMSFactory");
-  //        carLogger.Logger("Driver loaded.");
-  //        carLogger.Logger("Using connection string: " + conUrl + " with User: " + params[3] + " and password: " + params[4]);
-  //        connection = DriverManager.getConnection(conUrl, params[3], params[4]);
-  //      }
-  //
-  //      Statement st = (Statement) connection.createStatement();
-  //      int rs = st.executeUpdate("CREATE DATABASE CarRental");
-  //
-  //    }
-  //    catch (SQLException e)
-  //    {
-  //      carLogger.Logger("SQLException: " + e, e);
-  //      message = "SQLException: " + e;
-  //      return message;
-  //    }
-  //    catch (ClassNotFoundException e)
-  //    {
-  //      carLogger.Logger("Driver Error" + e, e);
-  //      message = "Driver Error: " + e;
-  //      return message;
-  //    }
-  //    catch (Exception e)
-  //    {
-  //      carLogger.Logger("Exception: " + e, e);
-  //      message = "Exception: " + e;
-  //      return message;
-  //    }
-  //    return message;
-  //
-  //  }
-
+  
+  
   public String getJDBCConnectionStatus()
   {
     carLogger.Logger("Testing if connection is valid.");
@@ -405,8 +398,9 @@ public class DatabaseOperations
         carLogger.Logger("Driver loaded.");
         carLogger.Logger("Using connection string: " + conUrl);
         connection = DriverManager.getConnection(conUrl);
+        
       }
-      else
+      else if(conUrl.contains("oracle"))
       {
         carLogger.Logger("Loading oracle.jdbc.driver.OracleDriver driver ..");
         Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -414,6 +408,14 @@ public class DatabaseOperations
         carLogger.Logger("Driver loaded.");
         carLogger.Logger("Using connection string: " + conUrl + " with User: " + params[3] + " and password: " + params[4]);
         connection = DriverManager.getConnection(conUrl, params[3], params[4]);
+      }
+      else{ //mysql
+        carLogger.Logger("Loading com.mysql.jdbc.Driver driver ..");
+        Class.forName("com.mysql.jdbc.Driver");
+        
+        carLogger.Logger("Driver loaded.");
+        carLogger.Logger("Using connection string: " + conUrl );
+        connection = DriverManager.getConnection(conUrl);
       }
         carLogger.Logger("Connection.ToString(): " + connection.toString());
       if (connection.isValid(2))

@@ -26,6 +26,17 @@
         form.password.value = "admin";
         form.sid.value = "N/A";
       }
+      
+      function disableTextFieldMySQL()
+      {
+        var form = document.forms[0];
+        form.sid.disabled = true;
+        form.port.value = "3306"
+        form.host.value = "localhost";
+        form.username.value = "carrental";
+        form.password.value = "123456";
+        form.sid.value = "N/A";
+      }
     </script>
     <link type="text/css" rel="stylesheet" href="css/jdeveloper.css"/>
   </head>
@@ -41,6 +52,11 @@
       </p>
       <p>
         <input type="radio" name="dbtype" value="oracle" onclick="javascript:enableTextField()"/><input type="text" name="txtOracle" value="Oracle"
+                                                                                                        readonly="readonly"/>
+      </p>
+      
+      <p>
+        <input type="radio" name="dbtype" value="mysql" onclick="javascript:enableTextFieldMySQL()"/><input type="text" name="txtOracle" value="MySQL"
                                                                                                         readonly="readonly"/>
       </p>
       <table class="borders" cellspacing="2" cellpadding="3" border="1">
