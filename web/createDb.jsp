@@ -43,7 +43,7 @@ java.sql.ResultSet,java.sql.SQLException,java.sql.Statement,carrental.helper.Car
     </script>
   </head>
   <%
-    String conUrl = myXMLHelper.getConnectionStringFromXMLNoLogging();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     //String[] params = myXMLHelper.getConnectionParamsFromXML();
     String dbType;
     Connection connection;

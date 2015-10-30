@@ -26,7 +26,7 @@ public class ConfigureDatabaseServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         XMLHelper myXMLHelper = new XMLHelper();
         CarRentalLogger carLogger = new CarRentalLogger();
-        String conUrl = myXMLHelper.getConnectionStringFromXML();
+        String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
         String[] params = myXMLHelper.getConnectionParamsFromXML();
         Connection connection;
         Statement statement;

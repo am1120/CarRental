@@ -44,7 +44,7 @@ public class CreateDatabaseObjectsServlet
     DatabaseOperations dbQueries = new DatabaseOperations();
     response.setContentType(CONTENT_TYPE);
     CarRentalLogger carLogger = new CarRentalLogger();
-    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     String[] params = myXMLHelper.getConnectionParamsFromXML();
     String dbType;
     Connection connection;

@@ -15,7 +15,7 @@ public class DatabaseOperations
 {
   static CarRentalLogger carLogger = new CarRentalLogger();
   static XMLHelper myXMLHelper = new XMLHelper();
-  String conUrl = myXMLHelper.getConnectionStringFromXML();
+  String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
   String[] params = myXMLHelper.getConnectionParamsFromXML();
 
   public DatabaseOperations()
@@ -26,7 +26,7 @@ public class DatabaseOperations
   public String buildConnectionURL(String _dbType, String _host, String _user, String _pass, String _port, String _sid)
   {
     String conUrl = null;
-    String dbType = _dbType;
+    String dbType = "mysql";
     String host = _host;
     String user = _user;
     String pass = _pass;
@@ -118,7 +118,7 @@ public class DatabaseOperations
     CarRentalLogger carLogger = new CarRentalLogger();
     PreparedStatement ps;
     String[] params = myXMLHelper.getConnectionParamsFromXML();
-    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     Random myRandom = new Random();
     // important vars
 
@@ -209,7 +209,7 @@ public class DatabaseOperations
     CarRentalLogger carLogger = new CarRentalLogger();
     PreparedStatement ps;
     String[] params = myXMLHelper.getConnectionParamsFromXML();
-    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     
     int pid = _id;
     
@@ -266,7 +266,7 @@ public class DatabaseOperations
     CarRentalLogger carLogger = new CarRentalLogger();
     PreparedStatement ps;
     String[] params = myXMLHelper.getConnectionParamsFromXML();
-    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     // important vars
     String name = _name;
     String model = _model;
@@ -358,7 +358,7 @@ public class DatabaseOperations
 
   public String createObjects()
   {
-    String conUrl = myXMLHelper.getConnectionStringFromXML();
+    String conUrl = "jdbc:mysql://localhost:3306/carrental?user=carrental&password=123456";
     String[] params = myXMLHelper.getConnectionParamsFromXML();
     String dbType;
     String message = "started";
